@@ -27,8 +27,15 @@ let default_config = {
       name: '蚂蚁积分签到',
       taskCode: 'AntCredits',
       script: 'AntCredits.js',
-      enabled: true
+      enabled: false
     },
+	{
+	  name: '青春豆签到',
+	  taskCode: 'AlipayYoung',
+	  script: 'AlipayYoung.js',
+	  enabled: true
+	}
+	/* ,
     {
       name: '京东签到',
       taskCode: 'JingDong',
@@ -158,7 +165,7 @@ let default_config = {
       taskCode: 'wsgw',
       script: 'WangShangGuoWang.js',
       enabled: true
-    }
+    } */
   ].concat(custom_config.supported_signs || [])
 }
 // 不同项目需要设置不同的storageName，不然会导致配置信息混乱
