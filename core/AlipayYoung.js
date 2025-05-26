@@ -32,12 +32,30 @@ function CreditRunner () {
     if (config.is_alipay_locked) {
       alipayUnlocker.unlockAlipay()
     }
-    app.startActivity({
-      action: 'VIEW',
-      data: 'alipays://platformapi/startapp?appId=20000067&url=%2Fwww%2FyouthPrivilege.html',
-      packageName: _package_name
-    })
+    if (widgetUtils.widgetWaiting('STU')) {
+      let myWidget = widgetUtils.widgetGetOne('STU')
+      automator.clickCenter(myWidget)
+      FloatyInstance.setFloatyText('跳转到STU界面')
+    }
     sleep(500)
+	if (widgetUtils.widgetWaiting('抢最高100元红包')) {
+	  let myWidget = widgetUtils.widgetGetOne('抢最高100元红包')
+	  automator.clickCenter(myWidget)
+	  FloatyInstance.setFloatyText('跳转到签到界面')
+	}
+	sleep(500)
+	FloatyInstance.setFloatyText('校验是否有打开确认弹框')
+	let confirm = widgetUtils.widgetGetOne(/^打开$/, 3000)
+	if (confirm) {
+	  this.displayButtonAndClick(confirm, '找到了打开按钮')
+	} else {
+	  FloatyInstance.setFloatyText('没有打开确认弹框')
+	}
+	if (widgetUtils.widgetWaiting('领今日青春豆')) {
+	  let myWidget = widgetUtils.widgetGetOne('领今日青春豆')
+	  automator.clickCenter(myWidget)
+	  FloatyInstance.setFloatyText('领今日青春豆')
+	}
     FloatyInstance.setFloatyText('校验是否有打开确认弹框')
     let confirm = widgetUtils.widgetGetOne(/^打开$/, 3000)
     if (confirm) {
@@ -45,12 +63,12 @@ function CreditRunner () {
     } else {
       FloatyInstance.setFloatyText('没有打开确认弹框')
     }
-    if (!widgetUtils.widgetWaiting('(我的(积分|等级特权))|每日签到')) {
+    if (!widgetUtils.widgetWaiting('赚更多青春豆')) {
       if (tryTime >= 5) {
-        warnInfo(['检测到未能进入会员积分界面，已尝试多次，放弃重试'])
+        warnInfo(['检测到未能进赚更多青春豆界面，已尝试多次，放弃重试'])
         return false
       }
-      warnInfo(['检测到未能进入会员积分界面，重新进入'])
+      warnInfo(['检测到未能进入赚更多青春豆界面，重新进入'])
       commonFunctions.minimize()
       return this.openCreditPage(tryTime++)
     }
