@@ -30,7 +30,7 @@ let default_config = {
             },
             {
                 name: '青春豆签到',
-                taskCode: 'AlipayYoung1',
+                taskCode: 'AlipayYoung2',
                 script: 'AlipayYoung.js',
                 enabled: true
             }

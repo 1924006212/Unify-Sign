@@ -229,7 +229,7 @@ function CreditRunner() {
                         title = null
                     try {
                         title = v.parent().parent().child(1).text()
-                        if (container.child.length() == 4) {
+                        if (container.child().length() === 4) {
                             boundsInfo = container.child(3).child(0).bounds()
 
                         } else {
