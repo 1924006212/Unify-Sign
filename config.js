@@ -11,31 +11,30 @@ let extendSignConfig = require('./signConfig.js')
 let custom_config = files.exists('./extends/CustomConfig.js') ? require('./extends/CustomConfig.js') : { supported_signs: [] }
 custom_config = custom_config || { supported_signs: [] }
 let default_config = {
-  record_failed_info: false,
-  not_lingering_float_window: true,
-  github_url: 'https://github.com/TonyJiangWJ/Unify-Sign',
-  // github release url 用于检测更新状态
-  github_latest_url: 'https://api.github.com/repos/TonyJiangWJ/Unify-Sign/releases/latest',
-  history_tag_url: 'https://api.github.com/repos/TonyJiangWJ/Unify-Sign/tags',
-  killAppWithGesture: true,
-  thread_name_prefix: 'unify_sign_',
-  notificationId: 113,
-  notificationChannelId: 'unify_sign_channel_id',
-  notificationChannel: '聚合签到通知',
-  supported_signs: [
-    {
-      name: '蚂蚁积分签到',
-      taskCode: 'AntCredits',
-      script: 'AntCredits.js',
-      enabled: false
-    },
-	{
-	  name: '青春豆签到',
-	  taskCode: 'AlipayYoung',
-	  script: 'AlipayYoung.js',
-	  enabled: true
-	}
-	/* ,
+        record_failed_info: false,
+        not_lingering_float_window: true,
+        github_url: 'https://github.com/TonyJiangWJ/Unify-Sign',
+        // github release url 用于检测更新状态
+        github_latest_url: 'https://api.github.com/repos/TonyJiangWJ/Unify-Sign/releases/latest',
+        history_tag_url: 'https://api.github.com/repos/TonyJiangWJ/Unify-Sign/tags',
+        killAppWithGesture: true,
+        thread_name_prefix: 'unify_sign_',
+        notificationId: 113,
+        notificationChannelId: 'unify_sign_channel_id',
+        notificationChannel: '聚合签到通知',
+        supported_signs: [{
+                name: '蚂蚁积分签到',
+                taskCode: 'AntCredits',
+                script: 'AntCredits.js',
+                enabled: false
+            },
+            {
+                name: '青春豆签到',
+                taskCode: 'AlipayYoung1',
+                script: 'AlipayYoung.js',
+                enabled: true
+            }
+            /* ,
     {
       name: '京东签到',
       taskCode: 'JingDong',
@@ -166,44 +165,44 @@ let default_config = {
       script: 'WangShangGuoWang.js',
       enabled: true
     } */
-  ].concat(custom_config.supported_signs || [])
-}
-// 不同项目需要设置不同的storageName，不然会导致配置信息混乱
+        ].concat(custom_config.supported_signs || [])
+    }
+    // 不同项目需要设置不同的storageName，不然会导致配置信息混乱
 let CONFIG_STORAGE_NAME = 'unify_sign'
 let PROJECT_NAME = '聚合签到'
-// 公共扩展
+    // 公共扩展
 let config = require('./config_ex.js')(default_config, { CONFIG_STORAGE_NAME, PROJECT_NAME })
 
 // 签到任务信息字段需要额外处理
 let storageConfig = storages.create(CONFIG_STORAGE_NAME)
 let key = 'supported_signs'
-// 首次运行时 key不存在 跳过处理
+    // 首次运行时 key不存在 跳过处理
 if (storageConfig.get(key) != null) {
-  // supported_signs是一个对象，需要用对象来解析覆盖
-  try {
-    let stored = JSON.parse(JSON.stringify(storageConfig.get(key)))
-    // 需要考虑default_config有新增和修改情况，因此仅仅提取enabled字段
-    // TODO enabled 信息可以考虑保存到数据库中
-    config[key] = default_config[key]
-    config[key].forEach(sign => {
-      let match = stored.filter(s => s.taskCode === sign.taskCode)
-      if (match && match.length > 0) {
-        let storeSignConfig = match[0]
-        sign.enabled = storeSignConfig.enabled
-        if (sign.subTasks && sign.subTasks.length > 0) {
-          sign.subTasks.forEach(subTask => {
-            match = (storeSignConfig.subTasks || []).filter(v => v.taskCode == subTask.taskCode)
+    // supported_signs是一个对象，需要用对象来解析覆盖
+    try {
+        let stored = JSON.parse(JSON.stringify(storageConfig.get(key)))
+            // 需要考虑default_config有新增和修改情况，因此仅仅提取enabled字段
+            // TODO enabled 信息可以考虑保存到数据库中
+        config[key] = default_config[key]
+        config[key].forEach(sign => {
+            let match = stored.filter(s => s.taskCode === sign.taskCode)
             if (match && match.length > 0) {
-              subTask.enabled = match[0].enabled
+                let storeSignConfig = match[0]
+                sign.enabled = storeSignConfig.enabled
+                if (sign.subTasks && sign.subTasks.length > 0) {
+                    sign.subTasks.forEach(subTask => {
+                        match = (storeSignConfig.subTasks || []).filter(v => v.taskCode == subTask.taskCode)
+                        if (match && match.length > 0) {
+                            subTask.enabled = match[0].enabled
+                        }
+                    })
+                }
             }
-          })
-        }
-      }
-    })
-  } catch (e) {
-    console.error('解析配置异常', e)
-  }
-  
+        })
+    } catch (e) {
+        console.error('解析配置异常', e)
+    }
+
 
 }
 config.exportIfNeeded(module, null)
