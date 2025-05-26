@@ -229,12 +229,14 @@ function CreditRunner() {
                         title = null
                     try {
                         title = v.parent().parent().child(1).text()
-                        if (container.child().length() === 4) {
+                        try {
                             boundsInfo = container.child(3).child(0).bounds()
-
-                        } else {
+                        } catch (error) {
                             boundsInfo = container.child(2).child(0).bounds()
                         }
+
+
+
                     } catch (e) {
                         boundsInfo = container.bounds()
                         title = '提取标题失败'
@@ -344,25 +346,25 @@ function CreditRunner() {
                         sleep(1000)
                     }
                 }),
-            // 借呗任务
-            () => buildTask(
-                btnInfo => btnInfo.title.indexOf('浏览15秒') > -1,
-                function(btn) {
-                    this.pushLog('借呗任务等待15秒')
-                    sleep(1000)
-                    let limit = 15
-                    while (limit-- > 0) {
-                        this.replaceLastLog('借呗任务等待' + limit + '秒')
-                        sleep(1000)
-                    }
-                    if (widgetUtils.widgetGetOne('.*逛一逛.*', 1000)) {
-                        this.pushLog('检测到目标控件，继续等待5s')
-                        sleep(5000)
-                    }
-                    automator.back()
-                    sleep(1000)
-                }
-            ),
+            // // 借呗任务
+            // () => buildTask(
+            //     btnInfo => btnInfo.title.indexOf('浏览15秒') > -1,
+            //     function(btn) {
+            //         this.pushLog('借呗任务等待15秒')
+            //         sleep(1000)
+            //         let limit = 15
+            //         while (limit-- > 0) {
+            //             this.replaceLastLog('借呗任务等待' + limit + '秒')
+            //             sleep(1000)
+            //         }
+            //         if (widgetUtils.widgetGetOne('.*逛一逛.*', 1000)) {
+            //             this.pushLog('检测到目标控件，继续等待5s')
+            //             sleep(5000)
+            //         }
+            //         automator.back()
+            //         sleep(1000)
+            //     }
+            // ),
             // 简单的小程序任务
             () => buildTask((btnInfo) => {
                     let regex = /小程序|饿了么|逛一逛蚂蚁庄园|封面小店上新啦|闲鱼红包|飞猪|青春特权/
