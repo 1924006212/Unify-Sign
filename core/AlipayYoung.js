@@ -32,6 +32,7 @@ function CreditRunner() {
         if (config.is_alipay_locked) {
             alipayUnlocker.unlockAlipay()
         }
+		sleep(500)
         if (widgetUtils.widgetWaiting('STU Club')) {
             let myWidget = widgetUtils.widgetGetOne('STU Club')
             sleep(500)
@@ -174,14 +175,12 @@ function CreditRunner() {
             if (limit <= 0) {
                 return
             }
-            this.pushLog('等待页面完全刷新 等待5秒')
             let wait = 2
             while (wait > 0) {
                 this.replaceLastLog('等待页面完全刷新 等待' + wait-- + '秒')
                 sleep(1000)
             }
             FloatyInstance.setFloatyText('查找任务')
-            sleep(1000)
             if (widgetUtils.widgetWaiting('去看看|去完成|去逛逛')) {
                 // let myWidget = widgetUtils.widgetGetOne('休闲时间玩一把|小游戏推荐|限时1000连抽|一键打开|超爽末日|小游戏')
 
@@ -274,18 +273,21 @@ function CreditRunner() {
                     this.pushLog('未能打开积分签到任务界面， 重新打开')
                     openSignPage()
                     sleep(2000)
-                    this.pushLog('打开结果：' + widgetUtils.widgetWaiting('会员签到赚积分', null, 2000))
                 }
                 return this.doTask(limit)
             } else {
                 this.pushLog('未找到可以执行的任务，请手动执行')
                 sleep(1000)
-                let changeTask = widgetUtils.widgetGetOne('换一换', 1000)
+				
+                let changeTask = widgetUtils.widgetGetOne('头部标题', 1000)
                 if (changeTask) {
                     this.pushLog('没找到可执行的任务，换一换：' + limit)
-                    changeTask.click()
+                    automator.back()
+					automator.back()
                     return this.doTask(limit - 1)
                 }
+				openSignPage()
+				return false
             }
 
         }
@@ -381,9 +383,9 @@ function CreditRunner() {
                     sleep(1000)
                 }
             ),
-            //小游戏 手机游戏排行榜","热门休闲小游戏","西游除妖，你能到几关","提取标题失败","去青春特权领权益"
+            
             () => buildTask((btnInfo) => {
-                    let regex = /休闲|西游除妖|挂机|游戏|好玩|射击|智商|建造|通关|脑子|下载|挑战|几关|点击|第1关|上头|三关|二关|僵尸|战力|连抽|末日|恶鬼|烧脑|开局选它，推图无敌！/
+                    let regex = /解压|卡|局|休闲|僵|尸|妖|神|挂机|游戏|好玩|射击|智商|建造|通关|脑子|粮|下载|挑战|几关|点击|第1关|上头|三关|二关|战力|连抽|末日|鬼|烧脑|无敌/
                     return regex.test(btnInfo.title)
                 },
                 function(btn) {
