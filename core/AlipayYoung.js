@@ -51,13 +51,13 @@ function CreditRunner() {
         }
 
         sleep(500)
-        FloatyInstance.setFloatyText('校验是否有打开确认弹框')
-        let confirm = widgetUtils.widgetGetOne(/^打开$/, 3000)
-        if (confirm) {
-            this.displayButtonAndClick(confirm, '找到了打开按钮')
-        } else {
-            FloatyInstance.setFloatyText('没有打开确认弹框')
-        }
+        // FloatyInstance.setFloatyText('校验是否有打开确认弹框')
+        // let confirm = widgetUtils.widgetGetOne(/^打开$/, 3000)
+        // if (confirm) {
+        //     this.displayButtonAndClick(confirm, '找到了打开按钮')
+        // } else {
+        //     FloatyInstance.setFloatyText('没有打开确认弹框')
+        // }
         if (widgetUtils.widgetWaiting('领取按钮')) {
             let myWidget = widgetUtils.widgetGetOne('领取按钮')
             automator.clickCenter(myWidget)
@@ -76,6 +76,8 @@ function CreditRunner() {
                 return false
             }
             warnInfo(['检测到未能进入赚更多青春豆界面，重新进入'])
+            automator.back()
+            automator.back()
             commonFunctions.minimize()
             return this.openCreditPage(tryTime++)
         }
@@ -279,9 +281,11 @@ function CreditRunner() {
                 this.pushLog('未找到可以执行的任务，请手动执行')
                 sleep(1000)
 				
-                let changeTask = widgetUtils.widgetGetOne('头部标题', 1000)
+                let changeTask = widgetUtils.widgetGetOne('记录', 1000)
                 if (changeTask) {
-                    this.pushLog('没找到可执行的任务，换一换：' + limit)
+                    automator.clickCenter(changeTask)
+                    automator.clickCenter(changeTask)
+                    sleep(2000)
                     automator.back()
 					automator.back()
                     return this.doTask(limit - 1)
@@ -385,7 +389,7 @@ function CreditRunner() {
             ),
             
             () => buildTask((btnInfo) => {
-                    let regex = /解压|卡|局|休闲|僵|尸|妖|神|挂机|游戏|好玩|射击|智商|建造|通关|脑子|粮|下载|挑战|几关|点击|第1关|上头|三关|二关|战力|连抽|末日|鬼|烧脑|无敌/
+                    let regex = /解压|卡|局|休闲|僵|尸|妖|神|挂机|游戏|玩|射击|智商|建造|通关|脑子|粮|下载|挑战|几关|点击|第1关|上头|三关|二关|战力|连抽|末日|鬼|烧脑|无敌/
                     return regex.test(btnInfo.title)
                 },
                 function(btn) {

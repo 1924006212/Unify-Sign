@@ -48,8 +48,6 @@ try {
 logInfo('======初始化SQLite成功=======')
 
 logInfo('======初始化任务数据=======')
-let run1 = require('./test/测试签到功能.js')(runtime, this)
-run1()
 signTaskManager.init()
     .generateDefaultScheduleConfig()
     .generateTaskSchedules()

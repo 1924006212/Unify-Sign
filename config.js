@@ -22,12 +22,7 @@ let default_config = {
         notificationId: 113,
         notificationChannelId: 'unify_sign_channel_id',
         notificationChannel: '聚合签到通知',
-        supported_signs: [{
-                name: '蚂蚁积分签到',
-                taskCode: 'AntCredits',
-                script: 'AntCredits.js',
-                enabled: false
-            },
+        supported_signs: [
             {
                 name: '青春豆签到',
                 taskCode: 'AlipayYoung2',
