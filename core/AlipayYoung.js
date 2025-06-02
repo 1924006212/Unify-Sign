@@ -32,7 +32,7 @@ function CreditRunner() {
         if (config.is_alipay_locked) {
             alipayUnlocker.unlockAlipay()
         }
-		sleep(500)
+        sleep(500)
         if (widgetUtils.widgetWaiting('STU Club')) {
             let myWidget = widgetUtils.widgetGetOne('STU Club')
             sleep(500)
@@ -51,13 +51,13 @@ function CreditRunner() {
         }
 
         sleep(500)
-        // FloatyInstance.setFloatyText('校验是否有打开确认弹框')
-        // let confirm = widgetUtils.widgetGetOne(/^打开$/, 3000)
-        // if (confirm) {
-        //     this.displayButtonAndClick(confirm, '找到了打开按钮')
-        // } else {
-        //     FloatyInstance.setFloatyText('没有打开确认弹框')
-        // }
+            // FloatyInstance.setFloatyText('校验是否有打开确认弹框')
+            // let confirm = widgetUtils.widgetGetOne(/^打开$/, 3000)
+            // if (confirm) {
+            //     this.displayButtonAndClick(confirm, '找到了打开按钮')
+            // } else {
+            //     FloatyInstance.setFloatyText('没有打开确认弹框')
+            // }
         if (widgetUtils.widgetWaiting('领取按钮')) {
             let myWidget = widgetUtils.widgetGetOne('领取按钮')
             automator.clickCenter(myWidget)
@@ -280,18 +280,18 @@ function CreditRunner() {
             } else {
                 this.pushLog('未找到可以执行的任务，请手动执行')
                 sleep(1000)
-				
+
                 let changeTask = widgetUtils.widgetGetOne('记录', 1000)
                 if (changeTask) {
                     automator.clickCenter(changeTask)
                     automator.clickCenter(changeTask)
                     sleep(2000)
                     automator.back()
-					automator.back()
+                    automator.back()
                     return this.doTask(limit - 1)
                 }
-				openSignPage()
-				return false
+                openSignPage()
+                return false
             }
 
         }
@@ -309,14 +309,14 @@ function CreditRunner() {
             () => buildTask(
                 btnInfo => {
                     let regex = /视频|搜索|借呗|传奇/
-                    return !regex.test(btnInfo.title) && btnInfo.title.indexOf('15秒') > -1
+                    return !regex.test(btnInfo.title) && btnInfo.title.indexOf('浏览15秒红包会场') > -1
                 },
                 function(btn) {
                     widgetUtils.widgetWaiting('点击或滑动')
                     let limit = new CountdownChecker(16)
                     let startY = config.device_height - config.device_height * 0.15
                     let endY = startY - config.device_height * 0.3
-                    while (!this.captureAndCheckByOcr('返回领积分', '返回领积分', null, null, false, 1)) {
+                    while (!this.captureAndCheckByOcr('返回领', '返回领', null, null, false, 1)) {
                         if (limit.isOvertime()) {
                             break
                         }
@@ -373,7 +373,7 @@ function CreditRunner() {
             // ),
             // 简单的小程序任务
             () => buildTask((btnInfo) => {
-                    let regex = /小程序|饿了么|逛一逛蚂蚁庄园|封面小店上新啦|闲鱼红包|飞猪|青春特权/
+                    let regex = /小程序|饿了么|逛一逛蚂蚁庄园|封面小店上新啦|闲鱼红包|飞猪/
                     return regex.test(btnInfo.title)
                 },
                 function(btn) {
@@ -387,9 +387,24 @@ function CreditRunner() {
                     sleep(1000)
                 }
             ),
-            
             () => buildTask((btnInfo) => {
-                    let regex = /解压|卡|局|休闲|僵|尸|妖|神|挂机|游戏|玩|射击|智商|建造|通关|脑子|粮|下载|挑战|几关|点击|第1关|上头|三关|二关|战力|连抽|末日|鬼|烧脑|无敌/
+                    let regex = /青春特权/
+                    return regex.test(btnInfo.title)
+                },
+                function(btn) {
+                    this.pushLog('小程序任务 点击进入 等待10秒 然后返回')
+                    let limit = 10
+                    while (limit-- > 0) {
+                        this.replaceLastLog('小程序任务等待' + limit + '秒')
+                        sleep(1000)
+                    }
+                    automator.back()
+                    sleep(1000)
+                }
+            ),
+
+            () => buildTask((btnInfo) => {
+                    let regex = /解压|卡|局|休闲|躺|僵|尸|妖|神|挂机|游戏|玩|射击|智商|建造|通关|脑子|粮|下载|挑战|几关|点击|第1关|上头|三关|二关|战力|连抽|末日|鬼|烧脑|无敌/
                     return regex.test(btnInfo.title)
                 },
                 function(btn) {
@@ -413,6 +428,7 @@ function CreditRunner() {
             }
         }
         this.pushLog('当前任务列表均未定义无法执行：' + JSON.stringify(buttonList.map(info => info.title)))
+
         return null
 
         function buildTask(filter, execute) {
